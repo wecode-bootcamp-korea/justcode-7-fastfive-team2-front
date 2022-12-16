@@ -1,9 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import "./App.css";
+import './App.css';
+import Router from './Pages/Router';
 
 function App() {
-  return <></>;
+  return <Router />;
 }
 
 export default App;
