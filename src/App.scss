@@ -1,0 +1,18 @@
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+
+  .mainWrapper {
+    display: flex;
+    flex: 1;
+
+    .mainContent {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+  }
+}
