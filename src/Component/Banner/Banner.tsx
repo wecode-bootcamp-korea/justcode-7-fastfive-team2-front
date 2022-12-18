@@ -1,13 +1,9 @@
 import React from "react";
 
-/* TODO :: interface bannerRefType {
-   bannerRef: React.ForwardedRef<HTMLDivElement>;
- }
- { img, bannerRef }: bannerRefType, img: string */
-function Banner() {
+function Banner({ img }: { img: string }) {
   return (
-    <div className="mainBanner">
-      <img className="banner" alt="banner" />
+    <div>
+      <img className="banner" alt="banner" src={img} />
     </div>
   );
 }

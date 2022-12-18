@@ -1,7 +1,20 @@
 .pagenation {
-  width: 300px;
-  height: 30px;
-  border: 1px solid black;
+  width: 30px;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 20px;
+  border: none;
+  background-color: inherit;
   text-align: center;
-  line-height: 25px;
+}
+
+.pagenation:hover {
+  background-color: gray;
+  color: white;
+  font-weight: bold;
+}
+
+.pagenation:focus {
+  background-color: gray;
+  color: white;
 }
