@@ -8,18 +8,16 @@ import Router from "./Pages/Router";
 
 function App() {
   return (
-    <>
-      <div className="wrapper">
-        <Header />
-        <div className="mainWrapper">
-          <Sidebar />
-          <div className="mainContent">
-            <Router />
-          </div>
+    <div className="wrapper">
+      <Header />
+      <div className="mainWrapper">
+        <Sidebar />
+        <div className="mainContent">
+          <Router />
         </div>
-        <Footer />
       </div>
-    </>
+      <Footer />
+    </div>
   );
 }
 

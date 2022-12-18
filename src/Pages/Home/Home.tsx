@@ -2,42 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 import "./Home.scss";
 import Pagenation from "../../Component/Pagenation/Pagenation";
 import Contentbox from "../../Component/Contentbox/Contentbox";
-// import Banner from "../../Component/Banner/Banner";
 
 function Home() {
-  // const [banner, setBanner] = useState<banner[]>([]);
-  // const bannerRef = useRef<HTMLDivElement | null>(null);
-
-  // const test = () => {
-  //   if (bannerRef.current) {
-  //     bannerRef.current.style.transform = "translateX(-2130px)";
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetch("./data/banner.json")
-  //     .then((res) => res.json())
-  //     .then((data) => setBanner(data.data));
-  // }, []);
-
-  // interface banner {
-  //   id: number;
-  //   img: string;
-  // }
-  // // test();
-  // console.log(banner);
   return (
     <>
       <div className="homeWrapper">
         <div className="mainBannerWrap">
           <button className="bannerButton">〈</button>
-          <div className="mainbannerWrapper">
-            {/* {banner &&
-              banner.map((el: banner) => {
-                const { img, id } = el;
-                return <Banner key={id} img={img} bannerRef={bannerRef} />;
-              })} */}
-          </div>
+          <div className="mainbannerWrapper"></div>
           <button className="bannerButton">〉</button>
         </div>
 

@@ -1,9 +1,9 @@
 import React from "react";
 
-// interface bannerRefType {
-//   bannerRef: React.ForwardedRef<HTMLDivElement>;
-// }
-// { img, bannerRef }: bannerRefType, img: string
+/* TODO :: interface bannerRefType {
+   bannerRef: React.ForwardedRef<HTMLDivElement>;
+ }
+ { img, bannerRef }: bannerRefType, img: string */
 function Banner() {
   return (
     <div className="mainBanner">
