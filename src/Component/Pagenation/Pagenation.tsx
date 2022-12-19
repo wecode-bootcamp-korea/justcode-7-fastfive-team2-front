@@ -20,7 +20,6 @@ function Pagenation({
   }
 
   const page = pageNumber.slice(blockPage, pageLimit + blockPage);
-  console.log(page);
 
   return (
     <>

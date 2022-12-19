@@ -162,9 +162,11 @@
   .ZendeskPageOpen {
     margin-top: 10px;
     margin-left: 50px;
-    span {
+    button {
       text-decoration: underline;
       cursor: pointer;
+      background: inherit;
+      border: none;
     }
   }
 }

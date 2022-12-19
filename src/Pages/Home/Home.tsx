@@ -1,15 +1,37 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import "./Home.scss";
 import Pagenation from "../../Component/Pagenation/Pagenation";
 import Contentbox from "../../Component/Contentbox/Contentbox";
 import Banner from "../../Component/Banner/Banner";
+
+interface isBanner {
+  id: number;
+  img: string;
+  num: number;
+}
+
+interface isCategorys {
+  id: number;
+  img: string;
+  categoryName: string;
+  content: string;
+}
+
+//TODO ::
+// type IntersectHandler = (
+//   entry: IntersectionObserverEntry,
+//   observer: IntersectionObserver
+// ) => void;
 
 function Home() {
   const [banner, setBanner] = useState<isBanner[]>([]);
   const [currentBanner, setCurrentBanner] = useState(0);
   const [currentBannerCount, setCurrentBannerCount] = useState(1);
   const [blockPage, setBlockPage] = useState(0);
+  const [categorys, setCategorys] = useState<isCategorys[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const bannerRef = useRef<HTMLDivElement>(null);
+  const observerRef = useRef<HTMLDivElement>(null);
   const pageNumber = [];
   const pageLimit = 5;
 
@@ -19,11 +41,31 @@ function Home() {
       .then((data) => setBanner(data.data));
   }, []);
 
-  interface isBanner {
-    id: number;
-    img: string;
-    num: number;
-  }
+  useEffect(() => {
+    fetch("./data/category.json")
+      .then((res) => res.json())
+      .then((data) => setCategorys(data.data));
+  }, []);
+
+  //TODO ::
+  // const handleObserver = useCallback(async (entries: any) => {
+  //   const target = entries[0];
+  //   if (target.isIntersecting) {
+  //     console.log("성공!?");
+  //     fetch("./data/category.json")
+  //       .then((res) => res.json())
+  //       .then((data) => setCategorys(data.data));
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   if (!observerRef.current) return;
+  //   const observer = new IntersectionObserver(handleObserver, { threshold: 1 });
+  //   observer.observe(observerRef.current);
+  //   return () => observer.disconnect();
+  // }, [observerRef]);
+
+  // console.log(categorys);
 
   const totalLength: number = Math.ceil(banner.length / 2);
 
@@ -74,6 +116,10 @@ function Home() {
     setBlockPage(totalLength - pageLimit);
   };
 
+  const ZendeskOpen = () => {
+    window.open("https://www.zendesk.kr/");
+  };
+
   return (
     <>
       <div className="homeWrapper">
@@ -109,9 +155,7 @@ function Home() {
           >
             ◁
           </button>
-          {/* {pageNumber.map((el) => {
-            return <button className="pagenation">{el}</button>;
-          })} */}
+
           <Pagenation
             totalLength={totalLength}
             blockPage={blockPage}
@@ -149,26 +193,22 @@ function Home() {
         </div>
 
         <div className="contentWrapper">
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
-          <Contentbox />
+          {categorys.map((el) => {
+            const { id, img, categoryName, content } = el;
+            return (
+              <Contentbox
+                key={id}
+                img={img}
+                categoryName={categoryName}
+                content={content}
+              />
+            );
+          })}
+          {!isLoading && <div ref={observerRef} />}
         </div>
 
         <div className="ZendeskPageOpen">
-          <span>멤버 소개 관련 문의</span>
+          <button onClick={ZendeskOpen}>멤버 소개 관련 문의</button>
         </div>
       </div>
     </>
