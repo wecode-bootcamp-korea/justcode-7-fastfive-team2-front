@@ -1,0 +1,40 @@
+.listBox {
+  width: 180px;
+  height: 230px;
+  border: 1px solid black;
+
+  .contentImage {
+    width: 100%;
+    height: 60%;
+    border-bottom: 1px solid black;
+  }
+
+  .categoryNameBox {
+    width: 100%;
+    height: 15%;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left;
+    line-height: 36px;
+    padding-left: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    .categoryName {
+      letter-spacing: -1px;
+    }
+
+    .comment {
+      font-size: 12px;
+      color: #b4b4b4;
+      margin-right: 15px;
+    }
+  }
+
+  .content {
+    width: 92%;
+    height: 15%;
+    padding: 8px;
+    overflow: hidden;
+  }
+}

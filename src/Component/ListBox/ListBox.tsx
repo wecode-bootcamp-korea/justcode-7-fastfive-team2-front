@@ -1,7 +1,7 @@
 import React from "react";
-import "./Contentbox.scss";
+import "./ListBox.scss";
 
-function Contentbox({
+function ListBox({
   img,
   categoryName,
   content,
@@ -12,10 +12,11 @@ function Contentbox({
 }) {
   return (
     <div>
-      <div className="contentBox">
+      <div className="listBox">
         <img alt="category" src={img} className="contentImage" />
         <div className="categoryNameBox">
           <span className="categoryName">{categoryName}</span>
+          <span className="comment">댓글 (3)</span>
         </div>
         <div className="content">
           <span>{content}</span>
@@ -25,4 +26,4 @@ function Contentbox({
   );
 }
 
-export default Contentbox;
+export default ListBox;

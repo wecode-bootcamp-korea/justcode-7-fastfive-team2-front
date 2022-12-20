@@ -1,20 +1,19 @@
 import React from "react";
-import "./Pagenation.scss";
+import "./ListPagenation.scss";
 
-interface pagenationInter {
+interface ListpagenationInter {
   totalLength: number;
   blockPage: number;
   setBlockPage: Function;
   pageLimit: number;
-  setCurrentBanner: Function;
+  setCurrentList: Function;
 }
-
-function Pagenation({
+function ListPagenation({
   totalLength,
   blockPage,
   pageLimit,
-  setCurrentBanner,
-}: pagenationInter) {
+  setCurrentList,
+}: ListpagenationInter) {
   const pageNumber = [];
 
   for (let i = 1; i <= totalLength; i++) {
@@ -28,9 +27,9 @@ function Pagenation({
       {page.map((el: number) => {
         return (
           <button
-            onClick={() => setCurrentBanner((el - 1) * -1310)}
+            onClick={() => setCurrentList((el - 1) * -524)}
             key={el}
-            className="pagenation"
+            className="listpagenation"
           >
             {el}
           </button>
@@ -40,4 +39,4 @@ function Pagenation({
   );
 }
 
-export default Pagenation;
+export default ListPagenation;
