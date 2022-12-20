@@ -1,18 +1,19 @@
 import React from "react";
 import "./ListPagenation.scss";
 
-function ListPagenation({
-  totalLength,
-  blockPage,
-  pageLimit,
-  setCurrentList,
-}: {
+interface ListpagenationInter {
   totalLength: number;
   blockPage: number;
   setBlockPage: Function;
   pageLimit: number;
   setCurrentList: Function;
-}) {
+}
+function ListPagenation({
+  totalLength,
+  blockPage,
+  pageLimit,
+  setCurrentList,
+}: ListpagenationInter) {
   const pageNumber = [];
 
   for (let i = 1; i <= totalLength; i++) {

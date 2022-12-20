@@ -1,18 +1,20 @@
 import React from "react";
 import "./Pagenation.scss";
 
-function Pagenation({
-  totalLength,
-  blockPage,
-  pageLimit,
-  setCurrentBanner,
-}: {
+interface pagenationInter {
   totalLength: number;
   blockPage: number;
   setBlockPage: Function;
   pageLimit: number;
   setCurrentBanner: Function;
-}) {
+}
+
+function Pagenation({
+  totalLength,
+  blockPage,
+  pageLimit,
+  setCurrentBanner,
+}: pagenationInter) {
   const pageNumber = [];
 
   for (let i = 1; i <= totalLength; i++) {
