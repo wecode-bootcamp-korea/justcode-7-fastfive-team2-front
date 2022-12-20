@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import Register from "./Register";
 
 import "./EditPost.scss";
@@ -11,6 +11,8 @@ export interface Iprops {
 const EditPost: React.FC = () => {
   const [category, setCategory] = useState<string>(""); //카테고리
   const [companyName, setCompanyName] = useState<string>(""); //회사이름
+  const [imageSrc, setImageSrc] = useState<string>(""); //로고 이미지 썸네일
+  const [logoFile, setLogoFile] = useState<File>(); //로고 이미지 파일
   const [countIntTextarea, setCountIntTextarea] = useState<number>(0); //회사소개 글자수
   const [compIntro, setCompIntro] = useState<string>(""); //회사소개
   const [compHomepage, setCompHomepage] = useState<string>(""); //홈페이지 주소
@@ -25,6 +27,72 @@ const EditPost: React.FC = () => {
   const [intFile, setIntFile] = useState<File>(); //회사소개서 파일
   const [compLocal, setCompLocal] = useState<string>(""); //이용 중인 지점
   const [modalOpen, setModalOpen] = useState<Boolean>(false); //등록확인 모달창
+  const [showCategoryAlert, setShowCategoryAlert] = useState<Boolean>(false); //필수항목 경고창(카테고리)
+  const [showNameAlert, setShowNameAlert] = useState<Boolean>(false); //필수항목 경고창(회사이름)
+  const [showLogoAlert, setShowLogoAlert] = useState<Boolean>(false); //필수항목 경고창(회사로고)
+  const [showIntAlert, setShowIntAlert] = useState<Boolean>(false); //필수항목 경고창(회사소개)
+  const [showMainAlert, setShowMainAlert] = useState<Boolean>(false); //필수항목 경고창(주력업무분야)
+  const [showCallAlert, setShowCallAlert] = useState<Boolean>(false); //필수항목 경고창(연락처)
+  const [showLocalAlert, setShowLocalAlert] = useState<Boolean>(false); //필수항목 경고창(이용 중인 지점)
+  const [showBoxAlert, setShowBoxAlert] = useState<Boolean>(false); //필수항목 경고창(체크박스)
+  const checkRef = useRef<HTMLInputElement>(null); //체크박스 Ref
+  const mandatory: (string | undefined)[] = [
+    category,
+    companyName,
+    compIntro,
+    compMain,
+    compCall,
+    compLocal,
+  ]; //필수 작성 항목
+
+  const handleRegister = (): void => {
+    const onResult = mandatory.filter((ele) => ele !== "");
+    const offResult = mandatory.filter((ele) => ele === "");
+    if (
+      onResult.length === 6 &&
+      logoFile !== undefined &&
+      checkRef.current?.checked === true
+    ) {
+      setModalOpen(true);
+      return;
+    } else if (
+      onResult.length === 6 &&
+      logoFile !== undefined &&
+      checkRef.current?.checked === false
+    ) {
+      setShowBoxAlert(true);
+      return;
+    } else if (
+      logoFile?.name === undefined &&
+      offResult[0] === compIntro &&
+      onResult[1] === companyName
+    ) {
+      setShowLogoAlert(true);
+
+      return;
+    } else {
+      switch (offResult[0]) {
+        case category:
+          setShowCategoryAlert(true);
+          break;
+        case companyName:
+          setShowNameAlert(true);
+          break;
+        case compIntro:
+          setShowIntAlert(true);
+          break;
+        case compMain:
+          setShowMainAlert(true);
+          break;
+        case compCall:
+          setShowCallAlert(true);
+          break;
+        case compLocal:
+          setShowLocalAlert(true);
+          break;
+      }
+    }
+  };
 
   const currnetTime = (): string => {
     let now = new Date(); // 현재 날짜 및 시간
@@ -79,6 +147,25 @@ const EditPost: React.FC = () => {
     setCompCall((e.target as HTMLInputElement).value);
   };
 
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const fileList = e.target.files! as FileList;
+    if (fileList[0].size > 1024 * 1024 * 10) {
+      alert(
+        `10MB 이하의 파일만 등록할 수 있습니다.\n\n현재파일 용량 : ${Math.round(
+          fileList[0].size / 1024 / 1024
+        )}MB`
+      );
+      e.target.value = "";
+      return;
+    }
+    setLogoFile(fileList[0]);
+    setImageSrc(URL.createObjectURL(fileList[0]));
+  };
+  const handleLogoCancel = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    setLogoFile(undefined);
+    setImageSrc("");
+  };
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const fileList = e.target.files! as FileList;
     if (fileList[0].size > 1024 * 1024 * 30) {
@@ -100,10 +187,6 @@ const EditPost: React.FC = () => {
 
   const handleLocal = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setCompLocal((e.target as HTMLSelectElement).value);
-  };
-
-  const handleModal = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    setModalOpen(!modalOpen);
   };
 
   return (
@@ -164,6 +247,11 @@ const EditPost: React.FC = () => {
           </option>
         </select>
       </div>
+
+      {showCategoryAlert && (
+        <p className="categoryAlert">필수 작성 항목입니다.</p>
+      )}
+
       <div className="companyNameWrap">
         <span>회사 이름*</span>
         <input
@@ -171,25 +259,51 @@ const EditPost: React.FC = () => {
           className="companyNameInput"
           onChange={handleCompanyName}
         />
+        {showNameAlert && <p className="nameAlert">필수 작성 항목입니다.</p>}
       </div>
       <div className="compLogoWrap">
         <span>회사 로고 or 대표 이미지*</span>
         <div className="fileAddWrap">
-          <button className="fileAdd">파일 첨부하기</button>
+          <input
+            type="file"
+            accept="image/jpg, image/png"
+            id="fileAdd"
+            onChange={handleLogoUpload}
+          ></input>
+          <label htmlFor="fileAdd" className="fileAddLabel">
+            파일 첨부하기
+          </label>
+          <div className="logoPreview">
+            {imageSrc && (
+              <>
+                <img src={imageSrc} alt="preview_img" className="logoImg" />
+                <button
+                  className="imgLogoCancel"
+                  onClick={handleLogoCancel}
+                ></button>
+              </>
+            )}
+          </div>
           <p>10mb 이하의 jpg, png파일을 선택해주세요.</p>
+          {showLogoAlert && <p className="logoAlert">필수 작성 항목입니다.</p>}
         </div>
       </div>
       <div className="compIntroduceWrap">
-        <span>회사 소개*</span>
-        <textarea
-          className="compIntroduce"
-          placeholder="100자 이내로 간단하게 설명해주세요."
-          maxLength={100}
-          onChange={countIntTextLength}
-        />
-        <span className={countIntTextarea === 100 ? "textCnt full" : "textCnt"}>
-          {countIntTextarea}/100
-        </span>
+        <span className="intTitle">회사 소개*</span>
+        <div className="intTextWrap">
+          <textarea
+            className="compIntroduce"
+            placeholder="100자 이내로 간단하게 설명해주세요."
+            maxLength={100}
+            onChange={countIntTextLength}
+          />
+          <span
+            className={countIntTextarea === 100 ? "textCnt full" : "textCnt"}
+          >
+            {countIntTextarea}/100
+          </span>
+          {showIntAlert && <p className="intAlert">필수 작성 항목입니다.</p>}
+        </div>
       </div>
       <div className="compHomepageWrap">
         <span>홈페이지</span>
@@ -209,43 +323,48 @@ const EditPost: React.FC = () => {
           onChange={handlecountComma}
         />
         {countComma === 5 && <p>주력 업무는 5개 이하로 소개해주세요.</p>}
+        {showMainAlert && <p className="mainAlert">필수 작성 항목입니다.</p>}
       </div>
 
       <div className="compDetailWrap">
         <p>자세한 소개 및 업무 레퍼런스</p>
-        <textarea
-          className="compDetail"
-          placeholder="우리 회사 소개, 패스트파이브 멤버들과 협업하고 싶은 프로젝트, 지금까지의 업무 레퍼런스 등 자세한 내용을 공유해주세요."
-          maxLength={1000}
-          onChange={countDetailTextLength}
-        />
-        <span
-          className={
-            countDetailTextarea === 1000
-              ? "compDetailCnt full"
-              : "compDetailCnt"
-          }
-        >
-          {countDetailTextarea}/1000
-        </span>
+        <div className="DetailTextWrap">
+          <textarea
+            className="compDetail"
+            placeholder="우리 회사 소개, 패스트파이브 멤버들과 협업하고 싶은 프로젝트, 지금까지의 업무 레퍼런스 등 자세한 내용을 공유해주세요."
+            maxLength={1000}
+            onChange={countDetailTextLength}
+          />
+          <span
+            className={
+              countDetailTextarea === 1000
+                ? "compDetailCnt full"
+                : "compDetailCnt"
+            }
+          >
+            {countDetailTextarea}/1000
+          </span>
+        </div>
       </div>
       <div className="compBenefitWrap">
         <p>패스트파이브 멤버 혜택</p>
-        <textarea
-          className="compBenefit"
-          placeholder="패스트파이브 멤버에게만 제공되는 혜택이 있다면 알려주세요. &#13;ex)패스트파이브 멤버 컨택 시 견적의 10% 할인 제공"
-          maxLength={100}
-          onChange={countBenefitTextLength}
-        />
-        <span
-          className={
-            countBenefitTextarea === 100
-              ? "compBenefitCnt full"
-              : "compBenefitCnt"
-          }
-        >
-          {countBenefitTextarea}/100
-        </span>
+        <div className="benefitTextWrap">
+          <textarea
+            className="compBenefit"
+            placeholder="패스트파이브 멤버에게만 제공되는 혜택이 있다면 알려주세요. &#13;ex)패스트파이브 멤버 컨택 시 견적의 10% 할인 제공"
+            maxLength={100}
+            onChange={countBenefitTextLength}
+          />
+          <span
+            className={
+              countBenefitTextarea === 100
+                ? "compBenefitCnt full"
+                : "compBenefitCnt"
+            }
+          >
+            {countBenefitTextarea}/100
+          </span>
+        </div>
       </div>
       <div className="compCallWrap">
         <span>대표 연락처*</span>
@@ -255,6 +374,7 @@ const EditPost: React.FC = () => {
           placeholder="업무상 컨택이 가능한 연락처를 알려주세요. ex) sample@fastfive.co.kr, 010-1234-1234"
           onChange={handleCall}
         />
+        {showCallAlert && <p className="callAlert">필수 작성 항목입니다.</p>}
       </div>
       <div className="compIntroLetterWrap">
         <span>회사 소개서</span>
@@ -316,14 +436,23 @@ const EditPost: React.FC = () => {
           <option value="hd1">홍대1호점</option>
           <option value="hd2">홍대2호점</option>
         </select>
+        {showLocalAlert && <p className="localAlert">필수 작성 항목입니다.</p>}
       </div>
       <div className="termsOfUseWrap">
-        <input type="checkbox" className="termsOfUseCheck" />
+        <input
+          type="checkbox"
+          className="termsOfUseCheck"
+          // onClick={handleCheck}
+          ref={checkRef}
+        />
         <span>패스트파이브 서비스 이용약관에 동의하십니까?(필수)</span>
       </div>
+      {showBoxAlert && (
+        <p className="boxAlert">서비스 이용약관에 동의해주세요</p>
+      )}
       <div className="btnWrap">
         <button className="preview">미리보기</button>
-        <button className="register" onClick={handleModal}>
+        <button className="register" onClick={() => handleRegister()}>
           등록하기
         </button>
         {modalOpen && (
