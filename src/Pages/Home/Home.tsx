@@ -121,97 +121,95 @@ function Home() {
   };
 
   return (
-    <>
-      <div className="homeWrapper">
-        <div className="mainBannerWrap">
-          <button onClick={PrevBanner} className="bannerButton">
-            〈
-          </button>
-          <div className="mainbannerWrapper">
-            <div ref={bannerRef} className="mainBanner">
-              {banner.map((el) => {
-                const { id, img } = el;
-                return <Banner key={id} img={img} />;
-              })}
-            </div>
-          </div>
-          <button onClick={NextBanner} className="bannerButton">
-            〉
-          </button>
-        </div>
-
-        <div className="pagenationWrpaer">
-          <button
-            disabled={blockPage === 0}
-            onClick={prevFirstPage}
-            className="pagefirst"
-          >
-            ◀
-          </button>
-          <button
-            disabled={blockPage === 0}
-            onClick={prevPage}
-            className="pageLeftBtn"
-          >
-            ◁
-          </button>
-
-          <Pagenation
-            totalLength={totalLength}
-            blockPage={blockPage}
-            setBlockPage={setBlockPage}
-            pageLimit={pageLimit}
-            setCurrentBanner={setCurrentBanner}
-          />
-          <button
-            disabled={blockPage + pageLimit === totalLength}
-            onClick={nextPage}
-            className="pageRightBtn"
-          >
-            ▷
-          </button>
-          <button
-            disabled={blockPage + pageLimit === totalLength}
-            onClick={LastPage}
-            className="pageLeftBtn"
-          >
-            ▶
-          </button>
-        </div>
-
-        <div className="introduceCompany">
-          <button>우리 회사 소개하기</button>
-        </div>
-
-        <div className="categoryShow">
-          <div className="sectorsView">
-            <span>업종별 살펴보기</span>
-          </div>
-          <div className="allView">
-            <button>전체 보기</button>
+    <div className="homeWrapper">
+      <div className="mainBannerWrap">
+        <button onClick={PrevBanner} className="bannerButton">
+          〈
+        </button>
+        <div className="mainbannerWrapper">
+          <div ref={bannerRef} className="mainBanner">
+            {banner.map((el) => {
+              const { id, img } = el;
+              return <Banner key={id} img={img} />;
+            })}
           </div>
         </div>
+        <button onClick={NextBanner} className="bannerButton">
+          〉
+        </button>
+      </div>
 
-        <div className="contentWrapper">
-          {categorys.map((el) => {
-            const { id, img, categoryName, content } = el;
-            return (
-              <Contentbox
-                key={id}
-                img={img}
-                categoryName={categoryName}
-                content={content}
-              />
-            );
-          })}
-          {!isLoading && <div ref={observerRef} />}
+      <div className="pagenationWrpaer">
+        <button
+          disabled={blockPage === 0}
+          onClick={prevFirstPage}
+          className="pagefirst"
+        >
+          ◀
+        </button>
+        <button
+          disabled={blockPage === 0}
+          onClick={prevPage}
+          className="pageLeftBtn"
+        >
+          ◁
+        </button>
+
+        <Pagenation
+          totalLength={totalLength}
+          blockPage={blockPage}
+          setBlockPage={setBlockPage}
+          pageLimit={pageLimit}
+          setCurrentBanner={setCurrentBanner}
+        />
+        <button
+          disabled={blockPage + pageLimit === totalLength}
+          onClick={nextPage}
+          className="pageRightBtn"
+        >
+          ▷
+        </button>
+        <button
+          disabled={blockPage + pageLimit === totalLength}
+          onClick={LastPage}
+          className="pageLeftBtn"
+        >
+          ▶
+        </button>
+      </div>
+
+      <div className="introduceCompany">
+        <button>우리 회사 소개하기</button>
+      </div>
+
+      <div className="categoryShow">
+        <div className="sectorsView">
+          <span>업종별 살펴보기</span>
         </div>
-
-        <div className="ZendeskPageOpen">
-          <button onClick={ZendeskOpen}>멤버 소개 관련 문의</button>
+        <div className="allView">
+          <button>전체 보기</button>
         </div>
       </div>
-    </>
+
+      <div className="contentWrapper">
+        {categorys.map((el) => {
+          const { id, img, categoryName, content } = el;
+          return (
+            <Contentbox
+              key={id}
+              img={img}
+              categoryName={categoryName}
+              content={content}
+            />
+          );
+        })}
+        {!isLoading && <div ref={observerRef} />}
+      </div>
+
+      <div className="ZendeskPageOpen">
+        <button onClick={ZendeskOpen}>멤버 소개 관련 문의</button>
+      </div>
+    </div>
   );
 }
 

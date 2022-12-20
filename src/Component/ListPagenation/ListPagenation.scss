@@ -1,0 +1,20 @@
+.listpagenation {
+  width: 30px;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 20px;
+  border: none;
+  background-color: inherit;
+  text-align: center;
+}
+
+.listpagenation:hover {
+  background-color: gray;
+  color: white;
+  font-weight: bold;
+}
+
+.listpagenation:focus {
+  background-color: gray;
+  color: white;
+}

@@ -1,0 +1,99 @@
+.listWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  .mainListWrap {
+    width: 1450px;
+    height: 120px;
+    margin: 0 auto;
+    padding-top: 30px;
+    margin-bottom: 30px;
+
+    .categoryName {
+      font-size: 30px;
+      font-weight: bold;
+      line-height: 180px;
+    }
+  }
+
+  .pagenationWrpaer {
+    height: 26px;
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+
+    .pagefirst {
+      width: 20px;
+      background-color: inherit;
+      border: none;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .pageLeftBtn {
+      width: 20px;
+      background-color: inherit;
+      border: none;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .pageRightBtn {
+      width: 20px;
+      background-color: inherit;
+      border: none;
+      cursor: pointer;
+    }
+  }
+
+  .introduceCompany {
+    width: 86%;
+    margin: 5px auto;
+    margin-bottom: 40px;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    .categoryBox {
+      width: 30%;
+      height: 100%;
+      display: flex;
+    }
+
+    button {
+      width: 250px;
+      height: 50px;
+      background-color: inherit;
+      border: 1px solid black;
+
+      right: 30px;
+    }
+  }
+
+  .listContentWrapper {
+    width: 100%;
+    height: 515px;
+    margin: 0 auto;
+    overflow: hidden;
+    .listWrapper {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      row-gap: 30px;
+      justify-items: center;
+      transform: translateY(-524px);
+    }
+  }
+
+  .ZendeskPageOpen {
+    margin-top: 10px;
+    margin-left: 50px;
+    button {
+      text-decoration: underline;
+      cursor: pointer;
+      background: inherit;
+      border: none;
+    }
+  }
+}
