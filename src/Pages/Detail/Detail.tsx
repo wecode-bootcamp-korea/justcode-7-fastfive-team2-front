@@ -2,43 +2,46 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Comment from './Comment';
-
-type CompanyType = {
-  id: number;
-  title: string;
-  explain: String;
-  img: string;
-  field: string;
-  benefit: string;
-  page: string;
-  number: string;
-  detail: string;
-  introduction: string;
-};
+import useFetch from '../../hook/useFetch';
+import Comments from './Comments';
+import './Detail.scss';
 
 function Detail() {
-  const [company, setCompany] = useState<CompanyType[]>([]);
+  const company = useFetch('http://localhost:3004/company');
   let { id } = useParams();
+
   console.log(company);
-
-  const getCompanyDetail = () => {
-    axios
-      .get(`http://localhost:3004/company/${id}`)
-      .then((res) => setCompany(res.data));
-  };
-
-  useEffect(() => {
-    getCompanyDetail();
-  }, [id]);
-  console.log('id', id);
   return (
     <div className='container'>
-      <div>전체보기</div>
-      {/* <img src={company?.img} alt='banner' />
-      <div>{company?.title}</div>
-      <div>{company?.explain}</div> */}
-      <Comment />
+      <div className='company-section'>
+        <div className='section'>전체보기</div>
+        <div className='company-modify'>
+          <span>수정</span>
+          <span>|</span>
+          <span>삭제</span>
+        </div>
+      </div>
+
+      <div className='Detail-area'>
+        {/* <img src={company.image} alt='banner' />
+        <h2>{company.corporationName}</h2>
+        <div>{company.detailIntro}</div>
+        <div>
+          <span className='Detail-intro'>업무분야</span>
+          <span>{company.field}</span>
+        </div>
+        <div>
+          <span className='Detail-intro'>홈페이지</span>{' '}
+          <span>{company.membersBenefits}</span>
+        </div>
+        <div>
+          <span className='Detail-intro'>연락처</span>{' '}
+          <span>{company.number}</span>
+        </div>
+        <div>{company.introFile}</div> */}
+      </div>
+
+      <Comments />
     </div>
   );
 }
