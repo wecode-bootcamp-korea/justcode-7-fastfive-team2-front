@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Register from "./Register";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -8,6 +14,8 @@ import "./EditPost.scss";
 export interface Iprops {
   modalOpen: Boolean;
   setModalOpen: Dispatch<SetStateAction<Boolean>>;
+  modifyBtn: Boolean;
+  setModifyBtn: Dispatch<SetStateAction<Boolean>>;
 }
 
 const EditPost: React.FC = () => {
@@ -37,8 +45,11 @@ const EditPost: React.FC = () => {
   const [showCallAlert, setShowCallAlert] = useState<Boolean>(false); //필수항목 경고창(연락처)
   const [showLocalAlert, setShowLocalAlert] = useState<Boolean>(false); //필수항목 경고창(이용 중인 지점)
   const [showBoxAlert, setShowBoxAlert] = useState<Boolean>(false); //필수항목 경고창(체크박스)
+  const [modifyBtn, setModifyBtn] = useState<Boolean>(false); //수정 버튼
   const checkRef = useRef<HTMLInputElement>(null); //체크박스 Ref
-  const mandatory: string[] = [
+  const [saveTime, setSaveTime] = useState<string>(""); //현재시간
+  const [isPrevData, setIsPrevData] = useState<Boolean>(false);
+  const mandatory: (string | number)[] = [
     category,
     companyName,
     compIntro,
@@ -48,24 +59,25 @@ const EditPost: React.FC = () => {
   ]; //필수 작성 항목
   const params = useParams();
 
-  const fileUpload = async () => {
+  const fileUpload = async (how: string) => {
     const formData = new FormData();
     formData.append("image", logoFile as File);
     formData.append("introduction_file", intFile as File);
     await axios({
-      method: "POST",
-      url: "http://localhost:8000/corporation",
+      method: `${how}`,
+      url: `http://localhost:8000/corporation${params.id}`,
       headers: {
         "Content-Type": "multipart/form-data",
       },
       data: formData,
     });
   };
-  const stringUpload = async () => {
+
+  const stringUpload = async (how: string) => {
     const splitCompMain = compMain.split(",");
     await axios({
-      method: "POST",
-      url: "http://localhost:8000/corporation",
+      method: `${how}`,
+      url: `http://localhost:8000/corporation${params.id}`,
       data: {
         category_id: category,
         corporation_name: companyName,
@@ -79,6 +91,38 @@ const EditPost: React.FC = () => {
       },
     });
   };
+
+  const prevData = async () => {
+    await axios({
+      method: "GET",
+      url: `http://localhost:8000/corporation${params.id}`,
+    }).then((res) => {
+      const result = res.data.data;
+      const keys = Object.keys(result);
+      console.log(result);
+
+      if (keys.filter((ele) => result[ele] === "").length !== 11) {
+        setModifyBtn(true);
+        setIsPrevData(true);
+      }
+      setCategory(result.category_id);
+      setCompanyName(result.corporation_name);
+      setCompIntro(result.introduction);
+      setCompHomepage(result.url);
+      setCompMain(result.field);
+      setCompDatil(result.detail_introduction);
+      setCompBenefit(result.members_benefits);
+      setCompCall(result.corporation_number);
+      setCompLocal(result.place_id);
+      setIntFile(result.introduction_file);
+      setIntFileName(result.introduction_file.name);
+      setLogoFile(result.image);
+    });
+  };
+  useEffect(() => {
+    prevData();
+  }, []);
+
   const handleRegister = (): void => {
     const onResult = mandatory.filter((ele) => ele !== "");
     const offResult = mandatory.filter((ele) => ele === "");
@@ -87,8 +131,8 @@ const EditPost: React.FC = () => {
       logoFile !== undefined &&
       checkRef.current?.checked === true
     ) {
-      fileUpload();
-      stringUpload();
+      fileUpload("POST");
+      stringUpload("POST");
       setModalOpen(true);
     } else if (
       onResult.length === 6 &&
@@ -102,6 +146,8 @@ const EditPost: React.FC = () => {
       offResult[0] === compIntro &&
       onResult[1] === companyName
     ) {
+      setShowCategoryAlert(false);
+      setShowNameAlert(false);
       setShowLogoAlert(true);
       return;
     } else {
@@ -111,34 +157,92 @@ const EditPost: React.FC = () => {
           break;
         case companyName:
           setShowNameAlert(true);
+          setShowCategoryAlert(false);
           break;
         case compIntro:
           setShowIntAlert(true);
+          setShowNameAlert(false);
+          setShowCategoryAlert(false);
+          setShowLogoAlert(false);
           break;
         case compMain:
           setShowMainAlert(true);
+          setShowIntAlert(false);
+          setShowNameAlert(false);
+          setShowCategoryAlert(false);
+          setShowLogoAlert(false);
           break;
         case compCall:
           setShowCallAlert(true);
+          setShowMainAlert(false);
+          setShowIntAlert(false);
+          setShowNameAlert(false);
+          setShowCategoryAlert(false);
+          setShowLogoAlert(false);
           break;
         case compLocal:
           setShowLocalAlert(true);
+          setShowCallAlert(false);
+          setShowMainAlert(false);
+          setShowIntAlert(false);
+          setShowNameAlert(false);
+          setShowCategoryAlert(false);
+          setShowLogoAlert(false);
           break;
       }
     }
   };
+  function useInterval(callback: () => void, delay: number | null): void {
+    const savedCallback = useRef<typeof callback>(callback);
 
-  const currnetTime = (): string => {
-    let now = new Date(); // 현재 날짜 및 시간
-    let currentYear: number = now.getFullYear();
-    let currentMonth: number = now.getMonth() + 1;
-    let currentDate: number = now.getDate();
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+
+    useEffect(() => {
+      function tick() {
+        savedCallback.current();
+      }
+      if (delay !== null) {
+        let id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+    }, [delay]);
+  }
+
+  useInterval(() => currentTime(), 60000);
+
+  const currentTime = (): void => {
+    let now = new Date();
+    let year: number = now.getFullYear();
+    let month: number = now.getMonth() + 1;
+    let date: number = now.getDate();
     let hours: number = now.getHours();
     let minutes: number = now.getMinutes();
-    return `${currentYear}. ${currentMonth}. ${currentDate}. ${hours}시 ${minutes}분에 자동 저장되었습니다.`;
+    setSaveTime(
+      year +
+        ". " +
+        month +
+        ". " +
+        date +
+        ". " +
+        hours +
+        "시" +
+        " " +
+        minutes +
+        "분"
+    );
   };
+  useEffect(() => {
+    currentTime();
+    fileUpload("PUT");
+    stringUpload("PUT");
+  }, [saveTime]);
 
   const handleCategory = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    console.log(e.target.value);
+    console.log(typeof e.target.value);
+
     setCategory((e.target as HTMLSelectElement).value);
   };
 
@@ -196,7 +300,7 @@ const EditPost: React.FC = () => {
       return;
     }
     setLogoFile(fileList[0]);
-    console.log(fileList[0]);
+
     setImageSrc(URL.createObjectURL(fileList[0]));
   };
 
@@ -236,55 +340,31 @@ const EditPost: React.FC = () => {
       </div>
       <div className="AutoSaveWrap">
         <p>우측*표시는 필수 작성 항목입니다.</p>
-        <p className="autoSave">{currnetTime()}</p>
+        {saveTime && (
+          <p className="autoSave">{saveTime}에 마지막으로 저장 되었습니다.</p>
+        )}
       </div>
       <div className="dropdown">
         <span>업종*</span>
-        <select className="category" onChange={handleCategory}>
-          <option value="" className="" selected>
+        <select className="category" onChange={handleCategory} value={category}>
+          <option value="0" selected>
             카테고리
           </option>
-          <option value="IT" className="">
-            IT
-          </option>
-          <option value="광고•마케팅" className="">
-            광고•마케팅
-          </option>
-          <option value="콘텐츠" className="">
-            콘텐츠
-          </option>
-          <option value="개발" className="">
-            개발
-          </option>
-          <option value="디자인" className="">
-            디자인
-          </option>
-          <option value="기획•컨설팅" className="">
-            기획•컨설팅
-          </option>
-          <option value="법률" className="">
-            법률
-          </option>
-          <option value="세무•회계" className="">
-            세무•회계
-          </option>
-          <option value="교육" className="">
-            교육
-          </option>
-          <option value="금융" className="">
-            금융
-          </option>
-          <option value="그외1" className="">
-            그외1
-          </option>
-          <option value="그외2" className="">
-            그외2
-          </option>
+          <option value="1">IT</option>
+          <option value="2">광고•마케팅</option>
+          <option value="3">콘텐츠</option>
+          <option value="4">개발</option>
+          <option value="5">디자인</option>
+          <option value="6">기획•컨설팅</option>
+          <option value="7">세무•회계</option>
+          <option value="8">법률</option>
+          <option value="9">교육</option>
+          <option value="10">금융</option>
+          <option value="11">그외1</option>
+          <option value="12">그외2</option>
         </select>
         <select className="detail">
-          <option value="" className="">
-            상세
-          </option>
+          <option value="">상세</option>
         </select>
       </div>
 
@@ -298,6 +378,7 @@ const EditPost: React.FC = () => {
           type="text"
           className="companyNameInput"
           onChange={handleCompanyName}
+          value={companyName}
         />
         {showNameAlert && <p className="nameAlert">필수 작성 항목입니다.</p>}
       </div>
@@ -336,6 +417,7 @@ const EditPost: React.FC = () => {
             placeholder="100자 이내로 간단하게 설명해주세요."
             maxLength={100}
             onChange={countIntTextLength}
+            value={compIntro}
           />
           <span
             className={countIntTextarea === 100 ? "textCnt full" : "textCnt"}
@@ -352,6 +434,7 @@ const EditPost: React.FC = () => {
           className="compHomepage"
           placeholder="우리 회사의 홈페이지 주소를 알려주세요."
           onChange={handleHomepage}
+          value={compHomepage}
         />
       </div>
       <div className="compMainWrap">
@@ -361,6 +444,7 @@ const EditPost: React.FC = () => {
           className="compMain"
           placeholder="5개 이하의 주요 업무를 쉼표로 구분하여 입력해주세요. ex) 디지털 마케팅, 콘텐츠 제작, 영상 제작"
           onChange={handlecountComma}
+          value={compMain}
         />
         {countComma === 5 && <p>주력 업무는 5개 이하로 소개해주세요.</p>}
         {showMainAlert && <p className="mainAlert">필수 작성 항목입니다.</p>}
@@ -374,6 +458,7 @@ const EditPost: React.FC = () => {
             placeholder="우리 회사 소개, 패스트파이브 멤버들과 협업하고 싶은 프로젝트, 지금까지의 업무 레퍼런스 등 자세한 내용을 공유해주세요."
             maxLength={1000}
             onChange={countDetailTextLength}
+            value={compDetail}
           />
           <span
             className={
@@ -394,6 +479,7 @@ const EditPost: React.FC = () => {
             placeholder="패스트파이브 멤버에게만 제공되는 혜택이 있다면 알려주세요. &#13;ex)패스트파이브 멤버 컨택 시 견적의 10% 할인 제공"
             maxLength={100}
             onChange={countBenefitTextLength}
+            value={compBenefit}
           />
           <span
             className={
@@ -413,6 +499,7 @@ const EditPost: React.FC = () => {
           className="compCall"
           placeholder="업무상 컨택이 가능한 연락처를 알려주세요. ex) sample@fastfive.co.kr, 010-1234-1234"
           onChange={handleCall}
+          value={compCall}
         />
         {showCallAlert && <p className="callAlert">필수 작성 항목입니다.</p>}
       </div>
@@ -437,7 +524,7 @@ const EditPost: React.FC = () => {
       </div>
       <div className="usePlaceWrap">
         <span>이용 중인 지점*</span>
-        <select className="usePlace" onChange={handleLocal}>
+        <select className="usePlace" onChange={handleLocal} value={compLocal}>
           <option value="" selected>
             지점명
           </option>
@@ -492,11 +579,22 @@ const EditPost: React.FC = () => {
       )}
       <div className="btnWrap">
         <button className="preview">미리보기</button>
-        <button className="register" onClick={() => handleRegister()}>
-          등록하기
-        </button>
+        {modifyBtn ? (
+          <button className="register" onClick={() => handleRegister()}>
+            수정하기
+          </button>
+        ) : (
+          <button className="register" onClick={() => handleRegister()}>
+            등록하기
+          </button>
+        )}
         {modalOpen && (
-          <Register setModalOpen={setModalOpen} modalOpen={modalOpen} />
+          <Register
+            setModalOpen={setModalOpen}
+            modalOpen={modalOpen}
+            setModifyBtn={setModifyBtn}
+            modifyBtn={modifyBtn}
+          />
         )}
         <button className="cancel">취소</button>
       </div>

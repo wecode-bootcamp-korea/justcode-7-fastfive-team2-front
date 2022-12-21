@@ -1,12 +1,23 @@
 import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Iprops } from "./EditPost";
 import "./EditPost.scss";
 
-const Register = ({ modalOpen, setModalOpen }: Iprops): JSX.Element => {
-  // const [modalClose, setModalClose] = useState<Boolean>(true); //등록확인 모달창
+const Register = ({
+  modalOpen,
+  setModalOpen,
+  modifyBtn,
+  setModifyBtn,
+}: Iprops): JSX.Element => {
+  const navigate = useNavigate();
+  const params = useParams();
 
   const handlePopup = (e: React.MouseEvent<HTMLButtonElement>): void => {
     setModalOpen(false);
+    modifyBtn === true && goToDetailPage();
+  };
+  const goToDetailPage = () => {
+    navigate(`/list/${params.id}`);
   };
 
   return (

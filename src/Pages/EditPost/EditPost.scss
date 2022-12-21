@@ -4,17 +4,19 @@ body {
 }
 
 .mainContainer {
+  width: 70%;
   padding-left: 5%;
   position: relative;
   .head {
     .headTitle {
+      margin-top: 50px;
       font-size: 20px;
       font-weight: 700;
     }
   }
 
   .AutoSaveWrap {
-    margin-left: 65%;
+    margin-right: 7%;
     p {
       margin: 0;
       text-align: right;
@@ -32,9 +34,9 @@ body {
     }
     .category {
       height: 30px;
-      width: 80px;
+      width: 100px;
       font-size: 15px;
-      text-align: right;
+      text-align: center;
     }
     .detail {
       height: 30px;
@@ -68,7 +70,7 @@ body {
   }
 
   .compLogoWrap {
-    padding-top: 15px;
+    padding-top: 25px;
     display: inline-block;
     // position: relative;
     span {
@@ -90,8 +92,8 @@ body {
       .logoPreview {
         display: inline;
         position: absolute;
-        top: 15%;
-        left: 35%;
+        top: 18%;
+        left: 24%;
         width: 10%;
         height: 10%;
 
@@ -111,13 +113,13 @@ body {
           margin-left: 8px;
           position: absolute;
           top: 1%;
-          right: 29%;
+          left: 29%;
         }
       }
 
       p {
         font-size: 15px;
-        margin: 10px 0 0 185px;
+        margin: 15px 0 0 185px;
       }
 
       .logoAlert {
@@ -269,6 +271,7 @@ body {
     .benefitTextWrap {
       width: 87%;
       position: relative;
+      margin-top: 10px;
       .compBenefit {
         width: 100%;
         height: 80px;
@@ -318,7 +321,7 @@ body {
   }
 
   .compIntroLetterWrap {
-    margin-top: 18px;
+    margin-top: 25px;
     position: relative;
     span {
       font-weight: 700;
@@ -357,7 +360,7 @@ body {
       }
       p {
         font-size: 14px;
-        margin: 10px 0 0 0;
+        margin: 15px 0 0 0;
       }
     }
   }
