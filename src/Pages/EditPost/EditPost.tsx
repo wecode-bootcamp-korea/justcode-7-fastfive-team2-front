@@ -1,5 +1,7 @@
 import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import Register from "./Register";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 import "./EditPost.scss";
 
@@ -36,7 +38,7 @@ const EditPost: React.FC = () => {
   const [showLocalAlert, setShowLocalAlert] = useState<Boolean>(false); //필수항목 경고창(이용 중인 지점)
   const [showBoxAlert, setShowBoxAlert] = useState<Boolean>(false); //필수항목 경고창(체크박스)
   const checkRef = useRef<HTMLInputElement>(null); //체크박스 Ref
-  const mandatory: (string | undefined)[] = [
+  const mandatory: string[] = [
     category,
     companyName,
     compIntro,
@@ -44,7 +46,39 @@ const EditPost: React.FC = () => {
     compCall,
     compLocal,
   ]; //필수 작성 항목
+  const params = useParams();
 
+  const fileUpload = async () => {
+    const formData = new FormData();
+    formData.append("image", logoFile as File);
+    formData.append("introduction_file", intFile as File);
+    await axios({
+      method: "POST",
+      url: "http://localhost:8000/corporation",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: formData,
+    });
+  };
+  const stringUpload = async () => {
+    const splitCompMain = compMain.split(",");
+    await axios({
+      method: "POST",
+      url: "http://localhost:8000/corporation",
+      data: {
+        category_id: category,
+        corporation_name: companyName,
+        introduction: compIntro,
+        url: compHomepage,
+        field: splitCompMain,
+        detail_introduction: compDetail,
+        members_benefits: compBenefit,
+        corporation_number: compCall,
+        place_id: compLocal,
+      },
+    });
+  };
   const handleRegister = (): void => {
     const onResult = mandatory.filter((ele) => ele !== "");
     const offResult = mandatory.filter((ele) => ele === "");
@@ -53,8 +87,9 @@ const EditPost: React.FC = () => {
       logoFile !== undefined &&
       checkRef.current?.checked === true
     ) {
+      fileUpload();
+      stringUpload();
       setModalOpen(true);
-      return;
     } else if (
       onResult.length === 6 &&
       logoFile !== undefined &&
@@ -68,7 +103,6 @@ const EditPost: React.FC = () => {
       onResult[1] === companyName
     ) {
       setShowLogoAlert(true);
-
       return;
     } else {
       switch (offResult[0]) {
@@ -119,6 +153,7 @@ const EditPost: React.FC = () => {
     setCountIntTextarea(countText);
     setCompIntro((e.target as HTMLTextAreaElement).value);
   };
+
   const countDetailTextLength = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ): void => {
@@ -126,6 +161,7 @@ const EditPost: React.FC = () => {
     setCountDetailTextarea(countText);
     setCompDatil((e.target as HTMLTextAreaElement).value);
   };
+
   const countBenefitTextLength = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ): void => {
@@ -137,6 +173,7 @@ const EditPost: React.FC = () => {
   const handleHomepage = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setCompHomepage((e.target as HTMLInputElement).value);
   };
+
   const handlecountComma = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const countCom = (e.target as HTMLInputElement).value.split(",").length - 1;
     setCountComma(countCom);
@@ -159,8 +196,10 @@ const EditPost: React.FC = () => {
       return;
     }
     setLogoFile(fileList[0]);
+    console.log(fileList[0]);
     setImageSrc(URL.createObjectURL(fileList[0]));
   };
+
   const handleLogoCancel = (e: React.MouseEvent<HTMLButtonElement>): void => {
     setLogoFile(undefined);
     setImageSrc("");
@@ -180,6 +219,7 @@ const EditPost: React.FC = () => {
     setIntFileName(fileList[0].name);
     setIntFile(fileList[0]);
   };
+
   const intFileCancel = (e: React.MouseEvent<HTMLButtonElement>): void => {
     setIntFile(undefined);
     setIntFileName("");
