@@ -3,7 +3,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-y: hidden;
+  // overflow-y: hidden; //이것때문에 안에 content 상하스크롤이 막히네요
 
   .mainWrapper {
     display: flex;
