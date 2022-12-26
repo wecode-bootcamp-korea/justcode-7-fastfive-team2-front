@@ -1,0 +1,60 @@
+{
+  "company": [
+    {
+      "categoryName": "IT",
+      "corporationName": "저스트 코",
+      "image": "https://search.pstatic.net/sunny/?src=https%3A%2F%2Fi.pinimg.com%2F736x%2F2a%2Fa7%2F28%2F2aa728955ac40453fe6383be5b06229c--steve-thompson-art-steve-thompson-disney.jpg&type=a340",
+      "introduction": "안녕하세",
+      "url": "http://www.naver.com",
+      "field": "it",
+      "detailIntro": "안녕하세요",
+      "membersBenefits": "안녕하세요",
+      "number": "101020120",
+      "introFile": "안녕하세요",
+      "placeName": "강남1호점"
+    }
+  ],
+  "comment": [
+    {
+      "remove": false,
+      "content": "새로운 내용을 작성해보았어요",
+      "nickname": "예지",
+      "date": "2022-12-18 17:04:50",
+      "id": 7
+    },
+    {
+      "remove": false,
+      "content": "soso",
+      "nickname": "예지",
+      "date": "2022-12-18 17:18:20",
+      "id": 8
+    },
+    {
+      "remove": false,
+      "content": "dddsfsfs",
+      "nickname": "예지",
+      "date": "2022-12-18 17:50:01",
+      "id": 9
+    },
+    {
+      "remove": false,
+      "content": "ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ",
+      "nickname": "예지",
+      "date": "2022-12-18 18:07:10",
+      "id": 10
+    },
+    {
+      "remove": false,
+      "content": "왜 바로 등록안대지??",
+      "nickname": "예지",
+      "date": "2022-12-18 18:07:33",
+      "id": 11
+    },
+    {
+      "content": "삭제",
+      "corporationId": 1,
+      "date": "2022-12-20 18:20:14",
+      "id": 12
+    }
+  ]
+}
