@@ -2,6 +2,7 @@
   width: 180px;
   height: 230px;
   border: 1px solid black;
+  cursor: pointer;
 
   .contentImage {
     width: 100%;
@@ -24,5 +25,11 @@
     height: 15%;
     padding: 8px;
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    span {
+      width: 30%;
+    }
   }
 }

@@ -4,23 +4,43 @@ import ListBox from "../../Component/ListBox/ListBox";
 import ListPagenation from "../../Component/ListPagenation/ListPagenation";
 import "./List.scss";
 
-interface isList {
-  id: number;
-  img: string;
-  categoryName: string;
-  content: string;
+// interface isList {
+//   id: number;
+//   image: string;
+//   corporation_name: string;
+//   introduction: string;
+// }
+interface dropBoxList {
+  id?: string;
+  name?: string;
+  location?: string[];
+  category?: string[];
+  category_detail?: string[];
 }
 
-function List() {
-  const [list, setList] = useState<isList[]>([]);
+function List({
+  list,
+  setList,
+  selectedCategory,
+  setSelectedCategory,
+}: {
+  list?: any;
+  setList?: any;
+  selectedCategory?: any;
+  setSelectedCategory?: any;
+}) {
   const [blockPage, setBlockPage] = useState(0);
   const [currentList, setCurrentList] = useState(0);
+  const [categoryDropBox, setCategoryDropBox] = useState<dropBoxList[]>([]);
   const ListRef = useRef<HTMLDivElement>(null);
 
+  const dropBoxList = "http://localhost:8000/list/info/?category_id=1";
+  const dropBoxListMock = "./data/dropBoxList.json";
+
   useEffect(() => {
-    fetch("./data/List.json")
+    fetch(dropBoxList)
       .then((res) => res.json())
-      .then((data) => setList(data.data));
+      .then((data) => setCategoryDropBox(data));
   }, []);
 
   const totalLength: number = Math.ceil(list.length / 8);
@@ -48,19 +68,22 @@ function List() {
     }
   }, [currentList]);
 
-  console.log(list);
-
   return (
     <div className="listWrapper">
       <div className="mainListWrap">
         <div className="categoryName">
-          <h1>전체 보기</h1>
+          {selectedCategory ? <h1>{selectedCategory}</h1> : <h1>전체 보기</h1>}
         </div>
       </div>
 
       <div className="introduceCompany">
         <div className="categoryBox">
-          <DropBox />
+          <DropBox
+            categoryDropBox={categoryDropBox}
+            setList={setList}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+          />
         </div>
         <button>우리 회사 소개하기</button>
       </div>
@@ -68,14 +91,14 @@ function List() {
       <div className="listContentWrapper">
         <div ref={ListRef} className="listWrapper">
           {list &&
-            list.map((el) => {
-              const { id, img, categoryName, content } = el;
+            list.map((el: any) => {
+              const { id, image, corporation_name, introduction } = el;
               return (
                 <ListBox
                   key={id}
-                  img={img}
-                  categoryName={categoryName}
-                  content={content}
+                  img={image}
+                  categoryName={corporation_name}
+                  content={introduction}
                 />
               );
             })}

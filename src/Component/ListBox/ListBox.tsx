@@ -16,7 +16,6 @@ function ListBox({
         <img alt="category" src={img} className="contentImage" />
         <div className="categoryNameBox">
           <span className="categoryName">{categoryName}</span>
-          <span className="comment">댓글 (3)</span>
         </div>
         <div className="content">
           <span>{content}</span>

@@ -1,40 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import "./DropBox.scss";
-function DropBox() {
+import LocationList from "./LocationList";
+import CategoryList from "./CategoryList";
+import CategoryDetailList from "./CategoryDetailList";
+
+function DropBox({
+  categoryDropBox,
+  setList,
+  selectedCategory,
+  setSelectedCategory,
+}: {
+  categoryDropBox: any;
+  setList: any;
+  selectedCategory: any;
+  setSelectedCategory: any;
+}) {
+  const [selectedLoactaion, setselectedLoactaion] = useState();
+  const [currentLoactionId, setCurrentLoactionId] = useState();
+  const [currentCategoryId, setCurrentCategoryId] = useState();
+  const location = categoryDropBox.places;
+  const category = categoryDropBox.categories;
+  const categoryDetail = categoryDropBox.categories_detail;
+
   return (
     <>
       <ul>
         <li>
           <div className="dropBoxWrapper">
-            <span>지역▼</span>
+            {selectedLoactaion ? (
+              <span>{selectedLoactaion}</span>
+            ) : (
+              <span>지역▼</span>
+            )}
+
             <ul className="areaDropBox">
-              <li>
-                <span>서울</span>
-              </li>
-              <li>
-                <span>경기</span>
-              </li>
-              <li>
-                <span>인천</span>
-              </li>
-              <li>
-                <span>충북</span>
-              </li>
-              <li>
-                <span>충남</span>
-              </li>
-              <li>
-                <span>전북</span>
-              </li>
-              <li>
-                <span>전남</span>
-              </li>
-              <li>
-                <span>경북</span>
-              </li>
-              <li>
-                <span>경남</span>
-              </li>
+              {location &&
+                location.map((el: any) => {
+                  const { id, name } = el;
+                  return (
+                    <LocationList
+                      key={id}
+                      id={id}
+                      name={name}
+                      setList={setList}
+                      setselectedLoactaion={setselectedLoactaion}
+                      currentCategoryId={currentCategoryId}
+                      setCurrentLoactionId={setCurrentLoactionId}
+                    />
+                  );
+                })}
             </ul>
           </div>
         </li>
@@ -43,26 +57,28 @@ function DropBox() {
       <ul>
         <li>
           <div className="dropBoxWrapper">
-            <span>카테고리▼</span>
+            {selectedCategory ? (
+              <span>{selectedCategory}</span>
+            ) : (
+              <span>카테고리▼</span>
+            )}
+
             <ul className="categoryDropBox">
-              <li>
-                <span>예시1</span>
-              </li>
-              <li>
-                <span>예시2</span>
-              </li>
-              <li>
-                <span>예시3</span>
-              </li>
-              <li>
-                <span>예시4</span>
-              </li>
-              <li>
-                <span>예시5</span>
-              </li>
-              <li>
-                <span>예시6</span>
-              </li>
+              {category &&
+                category.map((el: any) => {
+                  const { id, name } = el;
+                  return (
+                    <CategoryList
+                      key={id}
+                      id={id}
+                      name={name}
+                      setList={setList}
+                      setSelectedCategory={setSelectedCategory}
+                      currentLoactionId={currentLoactionId}
+                      setCurrentCategoryId={setCurrentCategoryId}
+                    />
+                  );
+                })}
             </ul>
           </div>
         </li>
@@ -72,27 +88,11 @@ function DropBox() {
           <div className="dropBoxWrapper">
             <span>상세분야▼</span>
             <ul className="detailDropBox">
-              <li>
-                <span>상세1</span>
-              </li>
-              <li>
-                <span>상세2</span>
-              </li>
-              <li>
-                <span>상세3</span>
-              </li>
-              <li>
-                <span>상세4</span>
-              </li>
-              <li>
-                <span>상세5</span>
-              </li>
-              <li>
-                <span>상세6</span>
-              </li>
-              <li>
-                <span>상세7</span>
-              </li>
+              {categoryDetail &&
+                categoryDetail.map((el: any) => {
+                  const { id, name } = el;
+                  return <CategoryDetailList key={id} id={id} name={name} />;
+                })}
             </ul>
           </div>
         </li>
