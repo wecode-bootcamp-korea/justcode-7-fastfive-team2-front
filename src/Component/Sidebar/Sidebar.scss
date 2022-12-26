@@ -1,0 +1,20 @@
+.sidebarBody {
+  min-width: 250px;
+  height: 100%;
+  z-index: 0;
+  background-color: #f6f6f6;
+  .sidebarWraper {
+    margin-top: 60px;
+    padding: 20px 0 0 40px;
+
+    .community {
+      font-weight: bold;
+      height: 40px;
+
+      li {
+        margin: 25px 0 0 10px;
+        font-weight: 500;
+      }
+    }
+  }
+}
