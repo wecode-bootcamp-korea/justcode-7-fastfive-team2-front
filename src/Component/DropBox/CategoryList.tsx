@@ -8,6 +8,7 @@ function CategoryList({
   setSelectedCategory,
   currentLoactionId,
   setCurrentCategoryId,
+  currentDetailId,
 }: {
   name?: string;
   id?: any;
@@ -15,12 +16,13 @@ function CategoryList({
   setSelectedCategory: any;
   currentLoactionId: any;
   setCurrentCategoryId: any;
+  currentDetailId: any;
 }) {
   const [param, setParam] = useSearchParams();
 
   const getCategoryList = () => {
-    if (currentLoactionId) {
-      const categoryBoxList = `http://localhost:8000/list?category_id=${id}&place_id=${currentLoactionId}`;
+    if (currentLoactionId && currentDetailId) {
+      const categoryBoxList = `http://localhost:8000/list?category_id=${id}&place_id=${currentLoactionId}&category_detail_id=${currentDetailId}`;
       fetch(categoryBoxList, {
         method: "GET",
         headers: {
@@ -36,6 +38,21 @@ function CategoryList({
       setCurrentCategoryId(id);
     } else if (!currentLoactionId) {
       const categoryBoxList = `http://localhost:8000/list?category_id=${id}`;
+      fetch(categoryBoxList, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => setList(data));
+
+      setSelectedCategory(name);
+      param.set("category", id);
+      setParam(param);
+      setCurrentCategoryId(id);
+    } else if (currentLoactionId) {
+      const categoryBoxList = `http://localhost:8000/list?category_id=${id}&place_id=${currentLoactionId}`;
       fetch(categoryBoxList, {
         method: "GET",
         headers: {

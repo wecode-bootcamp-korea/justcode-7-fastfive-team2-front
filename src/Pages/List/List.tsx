@@ -4,12 +4,6 @@ import ListBox from "../../Component/ListBox/ListBox";
 import ListPagenation from "../../Component/ListPagenation/ListPagenation";
 import "./List.scss";
 
-// interface isList {
-//   id: number;
-//   image: string;
-//   corporation_name: string;
-//   introduction: string;
-// }
 interface dropBoxList {
   id?: string;
   name?: string;
@@ -90,7 +84,7 @@ function List({
 
       <div className="listContentWrapper">
         <div ref={ListRef} className="listWrapper">
-          {list &&
+          {list.length !== 0 ? (
             list.map((el: any) => {
               const { id, image, corporation_name, introduction } = el;
               return (
@@ -101,7 +95,10 @@ function List({
                   content={introduction}
                 />
               );
-            })}
+            })
+          ) : (
+            <div>검색 결과가 없습니다.</div>
+          )}
         </div>
       </div>
 
@@ -128,6 +125,7 @@ function List({
           pageLimit={pageLimit}
           setCurrentList={setCurrentList}
         />
+
         <button
           disabled={blockPage + pageLimit === totalLength}
           onClick={nextPage}
